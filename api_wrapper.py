@@ -1,8 +1,5 @@
-from requests import get
 from aiohttp import ClientSession
 from dataclasses import dataclass
-from asyncio import run
-
 
 # These are the dataclasses for parsing the API results for this specific test
 
