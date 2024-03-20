@@ -1,5 +1,6 @@
 from aiohttp import ClientSession, ClientTimeout
 from dataclasses import dataclass
+import asyncio
 
 # These are the dataclasses for parsing the API results for this specific test
 
@@ -76,10 +77,15 @@ class EntityParsedResults:
 async def get_address_analysis(address: str) -> EntityParsedResults:
     url = f"https://wardanalyticsapi.com/addresses/{address}?only_direct=true"
     
-    async with ClientSession(timeout=ClientTimeout(120, 120, 120, 120, 120)) as session:
-        async with session.get(url) as response:
-            if response.status == 200:
-                res = await response.json()
-                return EntityParsedResults.from_api_result(res)
-            else:
-                raise Exception(response.text)
+    while True:
+        try:
+            async with ClientSession(timeout=ClientTimeout(120, 120, 120, 120, 120)) as session:
+                async with session.get(url) as response:
+                    if response.status == 200:
+                        res = await response.json()
+                        return EntityParsedResults.from_api_result(res)
+                    else:
+                        raise Exception(response.text)
+        except Exception as e:
+            print(f"Error fetching {address}: {e}, retrying...")
+            await asyncio.sleep(1)
