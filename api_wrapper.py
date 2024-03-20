@@ -1,4 +1,4 @@
-from aiohttp import ClientSession
+from aiohttp import ClientSession, ClientTimeout
 from dataclasses import dataclass
 
 # These are the dataclasses for parsing the API results for this specific test
@@ -21,7 +21,7 @@ class EntityParsedResults:
         for entity, value in self.entity_totals.items():
             total_received += value.received
             if entity != "Unknown": total_known_received += value.received
-        return (total_known_received / total_received) * 100
+        return (total_known_received / total_received) * 100 if total_received > 0 else 100
     
     @property
     def outgoing_coverage(self) -> float:
@@ -30,7 +30,7 @@ class EntityParsedResults:
         for entity, value in self.entity_totals.items():
             total_sent += value.sent
             if entity != "Unknown": total_known_sent += value.sent
-        return (total_known_sent / total_sent) * 100
+        return (total_known_sent / total_sent) * 100 if total_sent > 0 else 100
 
     @staticmethod
     def from_api_result(analysis_result: dict) -> "EntityParsedResults":
@@ -76,7 +76,7 @@ class EntityParsedResults:
 async def get_address_analysis(address: str) -> EntityParsedResults:
     url = f"https://wardanalyticsapi.com/addresses/{address}?only_direct=true"
     
-    async with ClientSession(timeout=60) as session:
+    async with ClientSession(timeout=ClientTimeout(120, 120, 120, 120, 120)) as session:
         async with session.get(url) as response:
             if response.status == 200:
                 res = await response.json()
