@@ -4,7 +4,7 @@
 
 1. Clone the repository
 2. Cd into the project directory
-3. Run `pip install -r requirements.txt`
+3. Run `pip install -r .\requirements.txt`
 
 ### How to run
 
