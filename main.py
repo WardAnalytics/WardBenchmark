@@ -46,7 +46,7 @@ async def main():
         # Print progress and ETA
         total_gathered += len(newResults)
         currentTime = time()
-        print(f"Progress: {total_gathered}/{len(ADDRESS_LIST)} ({round(total_gathered/len(ADDRESS_LIST) * 100, 2)}%)   |   Label Hits: {label_hits} ({round(label_hits/total_gathered, 2)}%)   |   Average Outgoing/Incoming Coverage: {round(sum(coverage)/len(coverage), 2)}%   |   ETA: {round((currentTime - start) * (len(ADDRESS_LIST) - total_gathered) / BATCH_SIZE, 2)}s")
+        print(f"Progress: {total_gathered}/{len(ADDRESS_LIST)} ({round(total_gathered/len(ADDRESS_LIST) * 100, 2)}%)   |   Label Hits: {label_hits} ({round((label_hits/total_gathered) * 100, 2)}%)   |   Average Outgoing/Incoming Coverage: {round(sum(coverage)/len(coverage), 2)}%   |   ETA: {round((currentTime - start) * (len(ADDRESS_LIST) - total_gathered) / BATCH_SIZE, 2)}s")
 
 if __name__ == "__main__":
     run(main())
